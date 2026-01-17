@@ -1,14 +1,19 @@
-import { ShoppingBag, Menu, Search, X } from 'lucide-react';
+import { ShoppingBag, Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Shop } from './pages/Shop';
 import { ProductDetails } from './pages/ProductDetails';
+import { Cart } from './pages/Cart';
+import { OurStory } from './pages/OurStory';
+import { Ingredients } from './pages/Ingredients';
+import { NavbarSearch } from './components/NavbarSearch';
+import { useCart } from './context/CartContext';
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const { totalItems } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,7 +36,7 @@ function App() {
             : 'bg-transparent border-transparent py-6'
             }`}
         >
-          <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between relative">
             <div className="flex items-center gap-4">
               <button
                 className="md:hidden p-1 hover:opacity-60 transition-opacity"
@@ -44,37 +49,31 @@ function App() {
               </Link>
             </div>
 
-            <ul className="hidden md:flex gap-10 items-center">
+            <ul className="hidden md:flex gap-10 items-center absolute left-1/2 -translate-x-1/2">
               {[
                 { name: 'Shop', path: '/shop' },
-                { name: 'Our Story', path: '/#about' },
-                { name: 'Ingredients', path: '/#ingredients' },
-                { name: 'Journal', path: '/#journal' }
+                { name: 'Our Story', path: '/our-story' },
+                { name: 'Ingredients', path: '/ingredients' },
               ].map((item) => (
                 <li key={item.name}>
-                  {item.path.startsWith('/#') ? (
-                    <a href={item.path} className="text-sm font-medium tracking-wide uppercase hover:text-olive transition-all duration-300 relative group">
-                      {item.name}
-                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-olive transition-all duration-300 group-hover:w-full"></span>
-                    </a>
-                  ) : (
-                    <Link to={item.path} className="text-sm font-medium tracking-wide uppercase hover:text-olive transition-all duration-300 relative group">
-                      {item.name}
-                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-olive transition-all duration-300 group-hover:w-full"></span>
-                    </Link>
-                  )}
+                  <Link to={item.path} className="text-sm font-medium tracking-wide uppercase hover:text-olive transition-all duration-300 relative group whitespace-nowrap">
+                    {item.name}
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-olive transition-all duration-300 group-hover:w-full"></span>
+                  </Link>
                 </li>
               ))}
             </ul>
 
-            <div className="flex items-center gap-6">
-              <button className="hidden sm:block hover:opacity-60 transition-opacity">
-                <Search size={20} className="text-stone-text" strokeWidth={1.5} />
-              </button>
-              <button className="relative hover:opacity-60 transition-opacity group">
+            <div className="flex items-center gap-3">
+              <NavbarSearch />
+              <Link to="/cart" className="relative hover:opacity-60 transition-opacity group">
                 <ShoppingBag size={20} className="text-stone-text group-hover:fill-stone-text/10 transition-colors" strokeWidth={1.5} />
-                <span className="absolute -top-1.5 -right-1.5 h-4 w-4 bg-olive text-white text-[10px] flex items-center justify-center rounded-full">0</span>
-              </button>
+                {totalItems > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 h-4 w-4 bg-olive text-white text-[10px] flex items-center justify-center rounded-full">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
             </div>
           </div>
         </nav>
@@ -89,29 +88,18 @@ function App() {
           <div className="flex flex-col items-center justify-center flex-1 gap-8 text-2xl font-serif">
             {[
               { name: 'Shop', path: '/shop' },
-              { name: 'Our Story', path: '/#about' },
-              { name: 'Ingredients', path: '/#ingredients' },
-              { name: 'Journal', path: '/#journal' }
+              { name: 'Our Story', path: '/our-story' },
+              { name: 'Ingredients', path: '/ingredients' },
+              { name: 'Cart', path: '/cart' },
             ].map((item) => (
-              item.path.startsWith('/#') ? (
-                <a
-                  key={item.name}
-                  href={item.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="hover:text-olive transition-colors relative group italic"
-                >
-                  {item.name}
-                </a>
-              ) : (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="hover:text-olive transition-colors relative group italic"
-                >
-                  {item.name}
-                </Link>
-              )
+              <Link
+                key={item.name}
+                to={item.path}
+                onClick={() => setMobileMenuOpen(false)}
+                className="hover:text-olive transition-colors relative group italic"
+              >
+                {item.name}
+              </Link>
             ))}
           </div>
         </div>
@@ -121,6 +109,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/our-story" element={<OurStory />} />
+          <Route path="/ingredients" element={<Ingredients />} />
         </Routes>
 
       </div>

@@ -1,12 +1,22 @@
 import { ArrowLeft, Minus, Plus, Star, Heart } from 'lucide-react';
 import { products } from '../data/products';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useCart } from '../context/CartContext';
 
 export function ProductDetails() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const product = products.find(p => p.id === Number(id));
     const [quantity, setQuantity] = useState(1);
+    const { addToCart } = useCart();
+
+    const handleAddToCart = () => {
+        if (product) {
+            addToCart(product, quantity);
+            navigate('/cart');
+        }
+    };
 
     if (!product) {
         return (
@@ -72,7 +82,7 @@ export function ProductDetails() {
                     </div>
 
                     <div className="flex gap-4">
-                        <button className="flex-1 bg-stone-text text-white py-4 rounded-full font-bold uppercase tracking-wider hover:bg-olive transition-colors shadow-lg shadow-stone-text/20">
+                        <button onClick={handleAddToCart} className="flex-1 bg-stone-text text-white py-4 rounded-full font-bold uppercase tracking-wider hover:bg-olive transition-colors shadow-lg shadow-stone-text/20">
                             Add to Cart
                         </button>
                         <button className="p-4 border border-stone-200 rounded-full hover:border-olive hover:text-olive transition-colors">

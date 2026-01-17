@@ -26,9 +26,9 @@ export function ProductCard({ product }: ProductCardProps) {
                     {product.isBestSeller && <span className="bg-olive/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Best Seller</span>}
                 </div>
 
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0">
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <button className="bg-white text-stone-text px-6 py-3 rounded-full text-sm font-bold tracking-wide uppercase shadow-lg hover:bg-olive hover:text-white transition-colors">
-                        Quick Add
+                        View
                     </button>
                 </div>
             </div>
